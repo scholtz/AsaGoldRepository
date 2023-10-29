@@ -8,7 +8,7 @@ namespace AsaGoldRepository.Model.RestDWH
     [RestDWHEntity(
         name: "EmailValidation",
         endpointGetById: "api/v1/email-validation/{id}",
-        endpointPut: "api/v1/email-validation"
+        endpointUpsert: "api/v1/email-validation"
         )]
     public class EmailValidation
     {

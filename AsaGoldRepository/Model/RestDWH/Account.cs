@@ -28,5 +28,9 @@ namespace AsaGoldRepository.Model.RestDWH
         /// Agrees to receive marketing promotions
         /// </summary>
         public bool MarketingConsent { get; set; } = false;
+        /// <summary>
+        /// Last email validation time
+        /// </summary>
+        public DateTimeOffset? LastEmailValidationTime { get; set; } = null;
     }
 }

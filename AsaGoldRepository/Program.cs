@@ -9,7 +9,6 @@ using RestDWH.Base.Model;
 using RestDWH.Base.Repository;
 using RestDWH.Elastic.Extensions;
 using RestDWH.Elastic.Repository;
-using System.Reflection;
 
 namespace AsaGoldRepository
 {

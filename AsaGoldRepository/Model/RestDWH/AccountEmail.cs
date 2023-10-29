@@ -9,7 +9,7 @@ namespace AsaGoldRepository.Model.RestDWH
         name: "AccountEmail",
         endpointGet: "api/v1/account-email",
         endpointGetById: "api/v1/account-email/{id}",
-        endpointPut: "api/v1/account-email",
+        endpointUpsert: "api/v1/account-email",
         endpointDelete: "api/v1/account-email"
         )]
     public class AccountEmail

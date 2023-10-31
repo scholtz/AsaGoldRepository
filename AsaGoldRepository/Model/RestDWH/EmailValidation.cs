@@ -21,9 +21,13 @@ namespace AsaGoldRepository.Model.RestDWH
         /// </summary>
         public string Email { get; set; }
         /// <summary>
+        /// Version of terms and conditions
+        /// </summary>
+        public string TermsAndConditions { get; set; }
+        /// <summary>
         /// Version of GDPR consent
         /// </summary>
-        public string Consent { get; set; }
+        public string GDPR { get; set; }
         /// <summary>
         /// Agrees to receive marketing promotions
         /// </summary>

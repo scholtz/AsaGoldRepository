@@ -29,7 +29,7 @@ namespace AsaGoldRepository.Model.RestDWH
         /// <summary>
         /// Version of GDPR consent
         /// </summary>
-        public string GDPR { get; set; }
+        public string Gdpr { get; set; }
         /// <summary>
         /// Agrees to receive marketing promotions
         /// </summary>

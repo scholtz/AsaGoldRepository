@@ -32,5 +32,9 @@ namespace AsaGoldRepository.Model.RestDWH
         /// Agrees to receive marketing promotions
         /// </summary>
         public bool MarketingConsent { get; set; } = false;
+        /// <summary>
+        /// Indicates if this email validation code has benn already used
+        /// </summary>
+        public bool Used { get; set; } = false;
     }
 }

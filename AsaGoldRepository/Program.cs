@@ -2,6 +2,7 @@
 using AlgorandAuthentication;
 using AsaGoldRepository.Model.Config;
 using Elasticsearch.Net;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Nest;
 using RestDWH.Base.Extensios;
@@ -102,8 +103,13 @@ namespace AsaGoldRepository
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
+            app.UseExceptionHandler(exceptionHandlerApp
+                => exceptionHandlerApp.Run(async context
+                    =>
+                {
+                    var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+                    await Results.Problem(exception.Message, null, 400, exception.Message).ExecuteAsync(context);
+                }));
             app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.Account>>());
             app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.AccountEmail>>());
             app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.EmailValidation>>());

@@ -36,5 +36,9 @@ namespace AsaGoldRepository.Model.RestDWH
         /// Last email validation time
         /// </summary>
         public DateTimeOffset? LastEmailValidationTime { get; set; } = null;
+        /// <summary>
+        /// Funded amount
+        /// </summary>
+        public ulong Funded { get; set; } = 0;
     }
 }

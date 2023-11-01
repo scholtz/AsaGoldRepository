@@ -37,5 +37,9 @@ namespace AsaGoldRepository.Model.RestDWH
         /// Indicates if this email validation code has benn already used
         /// </summary>
         public bool Used { get; set; } = false;
+        /// <summary>
+        /// Indicates the transaction id of the funding tx
+        /// </summary>
+        public string? FundTransaction { get; set; } = null;
     }
 }

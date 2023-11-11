@@ -10,6 +10,7 @@ namespace AsaGoldRepository.Model.RestDWH
     [RestDWHEntity(
         name: "KYCRequest",
         endpointGet: "api/v1/kyc",
+        endpointGetById: "api/v1/kyc/{id}",
         endpointUpsert: "api/v1/kyc/{id}",
         endpointPatch: "api/v1/kyc/{id}"
         )]

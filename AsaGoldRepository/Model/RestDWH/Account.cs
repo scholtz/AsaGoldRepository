@@ -40,5 +40,13 @@ namespace AsaGoldRepository.Model.RestDWH
         /// Funded amount
         /// </summary>
         public ulong Funded { get; set; } = 0;
+        /// <summary>
+        /// Last approved KYC request
+        /// </summary>
+        public string? ApprovedKYCRequestId { get; set; }
+        /// <summary>
+        /// Last KYC change request
+        /// </summary>
+        public string? LastKYCRequestId { get; set; }
     }
 }

@@ -74,6 +74,9 @@ namespace AsaGoldRepository
             builder.Services.AddSingleton<IDWHRepository<Model.RestDWH.Settings>, RestDWHElasticSearchRepository<Model.RestDWH.Settings>>();
             builder.Services.AddSingleton<RestDWHEvents<Model.RestDWH.Settings>>();
 
+            builder.Services.AddSingleton<IDWHRepository<Model.RestDWH.KYCRequest>, RestDWHElasticSearchRepository<Model.RestDWH.KYCRequest>>();
+            builder.Services.AddSingleton<RestDWHEvents<Model.RestDWH.KYCRequest>>();
+
 
             var algorandAuthenticationOptions = new AlgorandAuthenticationOptions();
             builder.Configuration.GetSection("AlgorandAuthentication").Bind(algorandAuthenticationOptions);
@@ -114,6 +117,7 @@ namespace AsaGoldRepository
             app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.AccountEmail>>());
             app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.EmailValidation>>());
             app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.Settings>>());
+            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.KYCRequest>>());
 
             app.MapControllers();
 

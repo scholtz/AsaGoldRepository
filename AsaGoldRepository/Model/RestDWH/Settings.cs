@@ -1,6 +1,6 @@
 ﻿using RestDWH.Base.Attributes;
 
-namespace AsaGoldRepository.Model.RestDWH
+namespace AsaGoldRepository.Model.DWH
 {
     /// <summary>
     /// Settings

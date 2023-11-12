@@ -3,8 +3,11 @@ using AlgorandAuthentication;
 using AsaGoldRepository.Model.Config;
 using Elasticsearch.Net;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Nest;
+using NLog;
+using NLog.Web;
 using RestDWH.Base.Extensios;
 using RestDWH.Base.Model;
 using RestDWH.Base.Repository;
@@ -15,8 +18,12 @@ namespace AsaGoldRepository
 {
     public class Program
     {
+        public static HashSet<string> Admins = new HashSet<string>();
         public static void Main(string[] args)
         {
+            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            logger.Debug("init main");
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -62,20 +69,23 @@ namespace AsaGoldRepository
             var client = new ElasticClient(settings);
             builder.Services.AddSingleton<IElasticClient>(client);
 
-            builder.Services.AddSingleton<IDWHRepository<Model.RestDWH.Account>, RestDWHElasticSearchRepository<Model.RestDWH.Account>>();
-            builder.Services.AddSingleton<RestDWHEvents<Model.RestDWH.Account>>();
+            builder.Services.AddSingleton<IDWHRepository<Model.DWH.Account>, RestDWHElasticSearchRepository<Model.DWH.Account>>();
+            builder.Services.AddSingleton<RestDWHEvents<Model.DWH.Account>>();
 
-            builder.Services.AddSingleton<IDWHRepository<Model.RestDWH.AccountEmail>, RestDWHElasticSearchRepository<Model.RestDWH.AccountEmail>>();
-            builder.Services.AddSingleton<RestDWHEvents<Model.RestDWH.AccountEmail>>();
+            builder.Services.AddSingleton<IDWHRepository<Model.DWH.AccountEmail>, RestDWHElasticSearchRepository<Model.DWH.AccountEmail>>();
+            builder.Services.AddSingleton<RestDWHEvents<Model.DWH.AccountEmail>>();
 
-            builder.Services.AddSingleton<IDWHRepository<Model.RestDWH.EmailValidation>, RestDWHElasticSearchRepository<Model.RestDWH.EmailValidation>>();
-            builder.Services.AddSingleton<RestDWHEvents<Model.RestDWH.EmailValidation>>();
+            builder.Services.AddSingleton<IDWHRepository<Model.DWH.EmailValidation>, RestDWHElasticSearchRepository<Model.DWH.EmailValidation>>();
+            builder.Services.AddSingleton<RestDWHEvents<Model.DWH.EmailValidation>>();
 
-            builder.Services.AddSingleton<IDWHRepository<Model.RestDWH.Settings>, RestDWHElasticSearchRepository<Model.RestDWH.Settings>>();
-            builder.Services.AddSingleton<RestDWHEvents<Model.RestDWH.Settings>>();
+            builder.Services.AddSingleton<IDWHRepository<Model.DWH.Settings>, RestDWHElasticSearchRepository<Model.DWH.Settings>>();
+            builder.Services.AddSingleton<RestDWHEvents<Model.DWH.Settings>>();
 
-            builder.Services.AddSingleton<IDWHRepository<Model.RestDWH.KYCRequest>, RestDWHElasticSearchRepository<Model.RestDWH.KYCRequest>>();
-            builder.Services.AddSingleton<RestDWHEvents<Model.RestDWH.KYCRequest>>();
+            builder.Services.AddSingleton<IDWHRepository<Model.DWH.KYCRequest>, RestDWHElasticSearchRepository<Model.DWH.KYCRequest>>();
+            builder.Services.AddSingleton<RestDWHEvents<Model.DWH.KYCRequest>>();
+
+            builder.Services.AddSingleton<IDWHRepository<Model.DWH.RFQ>, RestDWHElasticSearchRepository<Model.DWH.RFQ>>();
+            builder.Services.AddSingleton<RestDWHEvents<Model.DWH.RFQ>>();
 
 
             var algorandAuthenticationOptions = new AlgorandAuthenticationOptions();
@@ -96,6 +106,12 @@ namespace AsaGoldRepository
                  o.EmptySuccessOnFailure = algorandAuthenticationOptions.EmptySuccessOnFailure;
                  o.EmptySuccessOnFailure = algorandAuthenticationOptions.EmptySuccessOnFailure;
              });
+            var admins = builder.Configuration.GetSection("Admins").AsEnumerable().Select(k => k.Value).Where(k => !string.IsNullOrEmpty(k)).Select(k=>k.ToString()).ToHashSet();
+            if (admins?.Any() == true)
+            {
+                Admins = admins;
+                logger.Info($"Admins: {string.Join(",", Admins)}");
+            }
 
             var app = builder.Build();
 
@@ -113,11 +129,12 @@ namespace AsaGoldRepository
                     var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
                     await Results.Problem(exception.Message, null, 400, exception.Message).ExecuteAsync(context);
                 }));
-            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.Account>>());
-            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.AccountEmail>>());
-            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.EmailValidation>>());
-            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.Settings>>());
-            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.RestDWH.KYCRequest>>());
+            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.DWH.Account>>());
+            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.DWH.AccountEmail>>());
+            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.DWH.EmailValidation>>());
+            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.DWH.Settings>>());
+            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.DWH.KYCRequest>>());
+            app.MapEndpoints(app.Services.GetService<IDWHRepository<Model.DWH.RFQ>>());
 
             app.MapControllers();
 

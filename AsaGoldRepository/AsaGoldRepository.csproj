@@ -1,29 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>694fdfc9-c41e-401c-a34a-9a70ea28be3b</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>694fdfc9-c41e-401c-a34a-9a70ea28be3b</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Algorand2" Version="2.0.0.2023082310" />
-    <PackageReference Include="AlgorandARC76Account" Version="1.0.1" />
-    <PackageReference Include="AlgorandAuthentication" Version="1.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-    <PackageReference Include="RestDWH.Base" Version="2.2023.10.29" />
-    <PackageReference Include="RestDWH.ElasticSearch" Version="2.2023.10.29" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.12" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Algorand2" Version="2.0.0.2023082310" />
+		<PackageReference Include="AlgorandARC76Account" Version="1.0.1" />
+		<PackageReference Include="AlgorandAuthentication" Version="1.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+		<PackageReference Include="RestDWH.Base" Version="2.2023.10.29" />
+		<PackageReference Include="RestDWH.ElasticSearch" Version="2.2023.10.29" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.12" />
+		<PackageReference Include="NLog" Version="5.2.5" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.5" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="doc\readme.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="doc\readme.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

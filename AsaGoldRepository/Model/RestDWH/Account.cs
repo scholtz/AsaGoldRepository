@@ -1,6 +1,10 @@
-﻿using RestDWH.Base.Attributes;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using RestDWH.Base.Attributes;
+using RestDWH.Base.Model;
+using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace AsaGoldRepository.Model.RestDWH
+namespace AsaGoldRepository.Model.DWH
 {
     /// <summary>
     /// Account
@@ -9,6 +13,7 @@ namespace AsaGoldRepository.Model.RestDWH
     /// </summary>
     [RestDWHEntity(
         name: "Account",
+        events: typeof(AccountEvents),
         endpointGetById: "api/v1/user-account/{id}",
         endpointUpsert: "api/v1/user-account/{id}",
         endpointPatch: "api/v1/user-account/{id}",
@@ -48,5 +53,35 @@ namespace AsaGoldRepository.Model.RestDWH
         /// Last KYC change request
         /// </summary>
         public string? LastKYCRequestId { get; set; }
+    }
+    public class AccountEvents : RestDWH.Base.Model.RestDWHEvents<RFQ>
+    {
+        public override Task<string> BeforeGetByIdAsync(string id, ClaimsPrincipal? user = null)
+        {
+            if (string.IsNullOrEmpty(user?.Identity?.Name)) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            if (Program.Admins.Contains(user.Identity.Name)) return base.BeforeGetByIdAsync(id, user); // ok
+            if (id != user.Identity.Name) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            return base.BeforeGetByIdAsync(id, user); // ok
+        }
+        public override Task<(string id, RFQ data)> BeforeUpsertAsync(string id, RFQ data, ClaimsPrincipal? user = null)
+        {
+            if (string.IsNullOrEmpty(user?.Identity?.Name)) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            if (Program.Admins.Contains(user.Identity.Name)) return base.BeforeUpsertAsync(id, data, user);
+            if (id != user.Identity.Name) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            return base.BeforeUpsertAsync(id, data, user);
+        }
+        public override Task<(string id, JsonPatchDocument<RFQ> data)> BeforePatchAsync(string id, JsonPatchDocument<RFQ> data, ClaimsPrincipal? user = null)
+        {
+            if (string.IsNullOrEmpty(user?.Identity?.Name)) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            if (Program.Admins.Contains(user.Identity.Name)) return base.BeforePatchAsync(id, data, user);
+            if (id != user.Identity.Name) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            return base.BeforePatchAsync(id, data, user);
+        }
+        public override Task<string> BeforeDeleteAsync(string id, ClaimsPrincipal? user = null)
+        {
+            if (string.IsNullOrEmpty(user?.Identity?.Name)) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            if (Program.Admins.Contains(user.Identity.Name)) return base.BeforeDeleteAsync(id, user);
+            throw new UnauthorizedAccessException("You are not allowed to perform this action");
+        }
     }
 }

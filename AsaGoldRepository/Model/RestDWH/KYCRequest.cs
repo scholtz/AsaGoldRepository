@@ -1,4 +1,9 @@
-﻿using RestDWH.Base.Attributes;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Nest;
+using RestDWH.Base.Attributes;
+using RestDWH.Base.Model;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace AsaGoldRepository.Model.DWH
 {
@@ -31,5 +36,29 @@ namespace AsaGoldRepository.Model.DWH
         public Address? DeliveryAddress { get; set; }
         public Address? ResidentialAddress { get; set; }
         public Address? CompanyAddress { get; set; }
+    }
+    public class KYCEvents : RestDWH.Base.Model.RestDWHEvents<RFQ>
+    {
+        public override Task<(int from, int size, string query, string sort)> BeforeGetAsync(int from = 0, int size = 10, string query = "*", string sort = "", ClaimsPrincipal? user = null)
+        {
+            if (string.IsNullOrEmpty(user?.Identity?.Name)) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            if (Program.Admins.Contains(user.Identity.Name)) return base.BeforeGetAsync(from, size, query, sort, user);
+            throw new UnauthorizedAccessException("You are not allowed to perform this action");
+        }
+        public override Task<DBBase<RFQ>> AfterGetByIdAsync(DBBase<RFQ> result, string id, ClaimsPrincipal? user = null)
+        {
+            if (string.IsNullOrEmpty(user?.Identity?.Name)) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            if (Program.Admins.Contains(user.Identity.Name)) return base.AfterGetByIdAsync(result, id, user);
+            if (result.CreatedBy != user.Identity.Name) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            return base.AfterGetByIdAsync(result, id, user);
+        }
+        public override Task<(DBBase<RFQ>, DBBaseLog<RFQ>)> ToUpdate(DBBase<RFQ> item, DBBaseLog<RFQ> logItem, ClaimsPrincipal? user = null)
+        {
+            if (string.IsNullOrEmpty(user?.Identity?.Name)) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            if (Program.Admins.Contains(user.Identity.Name)) return base.ToUpdate(item, logItem, user);
+            if(item.CreatedBy != user.Identity.Name) throw new UnauthorizedAccessException("You are not allowed to perform this action");
+            return base.ToUpdate(item, logItem, user);
+        }
+
     }
 }
